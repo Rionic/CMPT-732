@@ -1,0 +1,45 @@
+1. What is your best guess for the slope and intercept of the streaming points being produced?
+
+    Alpha: 32.52824008923279
+    Beta: -7.349771694063615
+
+2. Is your streaming program's estimate of the slope and intercept getting better as the program runs? (That is: is the program aggregating all of the data from the start of time, or only those that have arrived since the last output?)
+
+    The program is aggregating all data from the start, so it should be getting very slightly better each iteration.
+
+3. In the colour classification question, what were your validation scores for the RGB and LAB pipelines?
+
+    RGB: 0.701575
+    LAB model: 0.6826771653543308
+
+4. When predicting the tmax values, did you over-fit the training data (and for which training/validation sets)?
+
+    Training Scores:
+    r2 = 0.8414904458530547
+    rmse = 4.953333889028117
+
+    Testing Scores:
+    r2 = 0.43493971692799427
+    rmse = 9.750336465055927
+
+    I did overfit judging from the much lower score on the testing data for the tmax-1 set.
+
+5. What were your testing scores for your model with and without the “yesterday's temperature” feature?
+
+    Without Yesterday:
+    r2 = 0.43493971692799427
+    rmse = 9.750336465055927
+
+    With Yesterday:
+    r2 = 0.8419134325686604
+    rmse = 5.140434663361169
+
+6. If you're using a tree-based model, you'll find a .featureImportances property that describes the relative importance of each feature (code commented out in weather_test.py; if not, skip this question). Have a look with and without the “yesterday's temperature” feature: do the results make sense and suggest that your model is making decisions reasonably? With “yesterday's temperature”, is it just predicting “same as yesterday”?
+
+    Without Yesterday:
+    (4,[0,1,2,3],[0.30399539285457416,0.1660889960313444,0.05846478185401893,0.4714508292600625])
+    
+    With Yesterday:
+    (5,[0,1,2,3,4],[0.05158060185130937,0.02787941693578218,0.028041014995927552,0.05866347577853926,0.8338354904384416])
+
+    We can see that with yesterday, it is heavily relying on the yesterday feature, but not entirely.

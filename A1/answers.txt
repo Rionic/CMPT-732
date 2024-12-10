@@ -1,0 +1,10 @@
+1. How did the output change when you submitted with -D mapreduce.job.reduces=3? Why would this be necessary if your job produced large output sets?
+
+We went from having one output file to three output files. This is necessary because if we have large output sets, we would have to scroll for an extremely long time if we want to find results further below. It also helps us group the output. E.g. A-F in output one, F-M in output two, etc. Also, having one massive file would probably be laggier to scroll through, say, compared to 50 smaller files.
+
+2. How was the -D mapreduce.job.reduces=0 output different?
+
+Ironically, it had three outputs. However, upon examination of the output files, we can see that there was in fact no reduction done. None of the strings got grouped together and each value is of one.
+
+3. Was there any noticeable difference in the running time of your RedditAverage with and without the combiner optimization?
+There was no change in the times.

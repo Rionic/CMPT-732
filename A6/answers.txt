@@ -1,0 +1,31 @@
+1. 
+   Subreddit and score fields were loaded. Average is computed by doing a partial average (average on each partition)
+   and then the final average (average of all the partition averages). Combiner-like work was done with the partial
+   aggregation.
+
+2.
+   Running times (cluster)
+      MapReduce: 2m32.7s
+      Spark DataFrames (With CPython): 1m27.1s
+      Spark RDDs (With CPython): 2m21.5s
+      Spark DataFrames (with PyPy): 1m19.1s
+      Spark RDDs (with PyPy): 1m16.7s
+
+   PyPy made a small difference for DataFrames, but a massive one for RDDs. PyPy made a significant improvement on RDDs
+   because most RDD operations run through the python interpreter. The python interpreter is slow and is a large reason
+   why RDDs are slower, but PyPy speeds this portion up a lot. PyPy's JIT compiler also improves performance of python
+   functions.
+
+3.
+   pagecounts-3 (cluster)
+      Non-broadcast: 2m56.8s
+      Broadcast: 5m11.9s
+
+   Broadcast slowed us down a lot. Perhaps the broadcasted dataset is still too large.
+
+4.
+   The differences we have is BroadcastHashJoin vs SortMergeJoin, and BroadcastExchange vs Sort.
+
+5.
+   I preferred the DataFrame method. The DataFrame form is much more readble and concise. In SQL, we have to repeat 
+   too many lines and it's a large waste of time and effort. 

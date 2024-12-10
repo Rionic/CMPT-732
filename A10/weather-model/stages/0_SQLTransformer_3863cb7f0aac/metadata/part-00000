@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.SQLTransformer","timestamp":1732064265858,"sparkVersion":"3.5.3","uid":"SQLTransformer_3863cb7f0aac","paramMap":{"statement":"SELECT *, dayofyear(date) AS day_of_year FROM __THIS__"},"defaultParamMap":{}}

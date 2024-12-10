@@ -1,0 +1,46 @@
+1. What happened when you inserted another row with the same primary key as an existing row?
+
+    The existing row got overwritten.
+
+2. What happened when you query a keyspace with replication factor 1 and one node down? How did it behave with 
+replication factor 2 and a node down?
+
+    Running a query with factor 1 sometimes worked, but some times raised the below error:
+        NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 10.17.203.211:9042 datacenter1>:
+        Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level ONE"
+        info={\'consistency\': \'ONE\', \'required_replicas\': 1, \'alive_replicas\': 0}')})
+
+    Factor 2 seemed to work fine all of the time.
+
+3. How did the consistency level affect the results with the node up/down?
+
+    Consistency one raised no error, but with consistency ALL, I got the following error:
+        NoHostAvailable: ('Unable to complete the operation against any hosts', {<Host: 10.17.203.211:9042 datacenter1>: 
+        Unavailable('Error from server: code=1000 [Unavailable exception] message="Cannot achieve consistency level ALL" 
+        info={\'consistency\': \'ALL\', \'required_replicas\': 2, \'alive_replicas\': 1}')})
+
+    Except when I ran SELECT * FROM test WHERE id=4;
+
+4. Which of the WHERE id=? values returned successfully with CONSISTENCY ALL when one of the nodes was down? Why do you
+think some could be returned but not others?
+
+    Value 4 was successful. When we set the consistency to ALL, this means that all nodes must respond to the query,
+    but with one node down, this will fail if the node contains the data we need.
+
+5. What was the CREATE TABLE statement you used for the nasalogs table? What was the primary key you choose, and why?
+
+    CREATE TABLE nasalogs (
+    host TEXT,
+    datetime TIMESTAMP,
+    path TEXT,
+    bytes INT,
+    id UUID,
+    PRIMARY KEY (host, id)
+  );
+
+    I used (host, id) as the primary key since we are going to aggregate by host and want them on the same node. The
+    id field helps make each record unique.
+
+6. What was the CQL query you used (or tried) to get the total number of bytes?
+
+    SELECT SUM(bytes) FROM nasalogs;

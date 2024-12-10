@@ -1,0 +1,47 @@
+1. What was wrong with the original wordcount-5 data set that made repartitioning worth it? Why did the program run
+ faster after?
+
+    After examining the size of each file, I noticed there is a large variance. (600MB -> 182KB). This means Spark
+    will create uneven partitions with its automatic partitioning, leading an unbalanced workload amongst partitions.
+    Repartition counters this by balancing the workload.
+
+2. The same fix does not make this code run faster on the wordcount-3 data set. (It may be slightly slower?) 
+Why? [For once, the answer is not “the data set is too small”.]
+
+    Repartitioning adds a lot of network overhead. Using less partitions would reduce the overhead. A high number of
+    partitions is generally only useful if each partition is completeing a significant amount of work, making the
+    overhead worth it, which is not the case here.
+
+3. How could you modify the wordcount-5 input so that the word count code can process it and get the same results as 
+fast as possible? (It's possible to get about another minute off the running time.)
+
+    Making the files all of similar size would improve performance so the partitioning work will be consistent.
+    Otherwise, with small files there may be too much network overhead, and with large ones there may be too much
+    work per partition.
+
+4. When experimenting with the number of partitions while estimating Euler's constant, you likely didn't see much 
+difference for a range of values, and chose the final value in your code somewhere in that range. What range of 
+partitions numbers was “good” (on the desktop/laptop where you were testing)?
+
+    1,000,000,000 samples (Local Machine w/ AMD Ryzen 8945HS 16-core) (partitions: time)
+    160: 32.4s
+    120: 32.8s
+    80: 31.6s
+    60: 32.4s
+    40: 34.6s
+    20: 40.3s
+    10: 36.3s
+
+    Seems that the 60 to 120 partition range is generally optimal and sees small change.
+
+5. How much overhead does it seem like Spark adds to a job? How much speedup did PyPy get over the usual Python 
+implementation?
+
+    Standard CPython: 59.1s
+    
+    Spark Python with PyPy: 42.6s - PyPy improved us by a good 16.5s
+
+    Non-Spark single-threaded PyPy: 1m16.3s - this is about 34s slower than spark with PyPy, so Spark adds a good
+    amount of overhead
+
+    Non-Spark single-threaded C: 49.0s

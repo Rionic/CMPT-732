@@ -1,0 +1,28 @@
+1. In the WikipediaPopular class, it would be much more interesting to find the page that is most popular, 
+not just the view count (as we did with Spark).What would be necessary to modify your class to do this? 
+(You don't have to actually implement it.)
+
+    It would be similar to the last assignment in that we'd need to pass down a pair and this would likely  
+    require a separate implementation because Java is not as nice as Python in many ways.
+
+2. An RDD has many methods: it can do many more useful tricks than were at hand with MapReduce. Write a sentence 
+or two to explain the difference between .map and .flatMap. Which is more like the MapReduce concept of mapping?
+
+    .map() will retain the stucture of the data returned, (e.g. tuples, lists, etc.), whereas flatMap will
+    flatten all of the data, removing all structure. I would say .map() is more like MapReduce because
+    of the way it retains data structure.
+
+3. Do the same for .reduce and .reduceByKey. Which is more like the MapReduce concept of reducing?
+
+    Like the name says, reduceByKey() reduces by a key and produces one output per key, where as reduce() takes
+    all of the data given and produces one output. reduceByKey() is more like MapReduce, at least based off the
+    way we have been using MapReduce.
+
+4. When finding popular Wikipedia pages, the maximum number of page views is certainly unique, but the most 
+popular page might be a tie. What would your improved Python implementation do if there were two pages with 
+the same highest number of page views in an hour? What would be necessary to make your code find all of the pages 
+views the maximum number of times? (Again, you don't have to actually implement this.)
+
+    My implementation would take the y value in a tie because it requires x to be greater than y, not equal to,
+    in order for x to win. To combat this, we can add a condition for ties and append the tied values together
+    so that they appear in the final output.
